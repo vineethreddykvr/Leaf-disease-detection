@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./nav.css";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Home from "./home";
-import Contact from "./contact";
 import About from "./about";
 import LoadingAnimation from "./loadinganimation";
 import { useLocation } from "react-router-dom";
 import Blogs from "./blogs";
-import Updates from "./updates";
 
 function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -63,29 +61,7 @@ function Navbar() {
             >
               Blogs <i className="fab fa-blogger-b"></i>{" "}
             </NavLink>
-          </li>
-        
-          <li>
-            <NavLink
-              to="/contact"
-              style={({ isActive }) => ({
-                color: isActive ? "greenyellow" : "white",
-              })}
-            >
-              Post blogs <i className="fa-message"> </i>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/updates" 
-              style={({ isActive }) => ({
-                color: isActive ? "greenyellow" : "white",
-              })}
-            >
-              {" "}
-              Updates <i className=""> </i>
-            </NavLink>
-          </li>
+          </li>         
           <li>
             <NavLink
               to="/devteam"
@@ -129,9 +105,7 @@ export default function Website() {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/devteam" element={<About />} />
-            <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/blogs" element={<Blogs />} />
-            <Route exact path="/updates" element={<Updates />} />
           </Routes>
         </BrowserRouter>
       )}

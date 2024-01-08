@@ -1,25 +1,47 @@
 // Import necessary dependencies
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import { Button, Form, Container, Row, Col } from "react-bootstrap";
+import axios from "axios";
 import { GoogleLogin, GoogleOAuthProvider, useGoogleOAuth } from '@react-oauth/google';
 import "./app.css"
 import Website from "./Website";
+
 
 
 // App component
 const App = () => {
   
   const [isLoggedIn, setLoggedIn] = useState(false);
-useEffect(()=>{
-  const log=localStorage.getItem('jwt')
-  if(log){
-    setLoggedIn(true)
-  }
-  else{
-    setLoggedIn(false)
-  }
-},[])
+  useEffect(() => {
+    const log = localStorage.getItem('jwt');
+    if (log) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      console.log(credentialResponse);
+      setLoggedIn(true);
+      const jwtToken = credentialResponse;
+      const response = await axios.post('http://localhost:5000/store-jwt', { jwtToken }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response) {
+        console.log('JWT stored successfully on the server');
+      } else {
+        console.log('Failed to store JWT on the server');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+  };
+
+
   const GoogleAuthButton = () => {
     const { signIn, isSignedIn } = useGoogleOAuth();
   
@@ -27,12 +49,12 @@ useEffect(()=>{
       <div>
         
   <GoogleLogin
-    onSuccess={credentialResponse => {
-      console.log(credentialResponse);
+          onSuccess={(credentialResponse) => {handleGoogleLogin(credentialResponse)
+          console.log(credentialResponse);
       setLoggedIn(true)
-      localStorage.setItem("jwt",credentialResponse.credential
-      )
-    }}
+      // localStorage.setItem("jwt",credentialResponse.credential)
+    }
+    }
     onError={() => {
       console.log('Login Failed');
     }}
