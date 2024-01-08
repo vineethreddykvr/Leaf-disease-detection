@@ -1,0 +1,48 @@
+.popup {
+  position: fixed;
+  right: 20px;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 999;
+  background-color: #fff;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.4);
+  transition: width 0.3s ease;
+}
+
+.popup-trigger {
+  padding: 10px;
+  cursor: pointer;
+  font-weight:bold ;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 5px;
+  animation: effect 3s linear infinite;
+}
+
+@keyframes effect {
+0% {
+background: linear-gradient(
+ #3b4b3b, #ff0000);
+-webkit-background-clip: text;
+}
+
+100% {
+background: linear-gradient(
+ #3CE7D7, #0415fe);
+-webkit-background-clip: text;
+}
+}
+
+.popup-content {
+  padding: 10px;
+}
+
+.popup-text {
+  margin-bottom: 10px;
+}
+
+.popup-close {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
