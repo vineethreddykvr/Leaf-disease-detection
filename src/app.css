@@ -1,13 +1,12 @@
 /* App container */
-.app-container {
-    display: flex;
+.a-c {
     justify-content: center;
     align-items: center;
     height: 100vh;
   }
   
   /* Login container */
-  .login-container {
+  .l-c {
     width: 400px;
     padding: 20px;
     border: 1px solid #ccc;
@@ -15,7 +14,7 @@
   }
   
   /* Login options */
-  .login-options {
+  .l-o {
     text-align: center;
     margin-top: 20px;
   }
