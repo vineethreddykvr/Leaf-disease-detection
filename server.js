@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/leaf-disease-detection', {
 app.use(cors())
 const userSchema = new mongoose.Schema({
   name: String,
-  localName: String,
+  family_name: String,
   givenName: String,
   email: String,
   picture: String,
@@ -27,19 +27,17 @@ app.use(express.json());
 
 app.post('/store-jwt', async (req, res) => {
   try {
-    const { jwtToken } = req.body;
+    const  data  = req.body;
+    const user = new User({
+      name: data.decoded.name,
+      localName: data.decoded.locale,
+      family_name: data.decoded.given_name,
+      email: data.decoded.email,
+      picture: data.decoded.picture,
+    });
+    console.log(user);
 
-    // const decoded = jwt.verify(jwtToken, publicKey, { algorithms: ['RS256'] });
-
-    // const user = new User({
-    //   name: decoded.name,
-    //   localName: decoded.locale,
-    //   givenName: decoded.given_name,
-    //   email: decoded.email,
-    //   picture: decoded.picture,
-    // });
-console.log(jwtToken)
-
+    await user.save();
     res.status(200).json({ success: true });
   } catch (error) {
     console.error('Error verifying JWT:', error);

@@ -4,6 +4,7 @@ import axios from "axios";
 import { GoogleLogin, GoogleOAuthProvider, useGoogleOAuth } from '@react-oauth/google';
 import "./app.css"
 import Website from "./Website";
+import { jwtDecode } from "jwt-decode";
 
 
 
@@ -23,9 +24,10 @@ const App = () => {
   const handleGoogleLogin = async (credentialResponse) => {
     try {
       console.log(credentialResponse);
+      const decoded = jwtDecode(credentialResponse.credential)
       setLoggedIn(true);
       const jwtToken = credentialResponse;
-      const response = await axios.post('http://localhost:5000/store-jwt', { jwtToken }, {
+      const response = await axios.post('http://localhost:5000/store-jwt', { decoded }, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -50,9 +52,8 @@ const App = () => {
         
   <GoogleLogin
           onSuccess={(credentialResponse) => {handleGoogleLogin(credentialResponse)
-          console.log(credentialResponse);
       setLoggedIn(true)
-      // localStorage.setItem("jwt",credentialResponse.credential)
+      localStorage.setItem("jwt",credentialResponse.credential)
     }
     }
     onError={() => {
