@@ -10,7 +10,8 @@ import { jwtDecode } from "jwt-decode";
 
 // App component
 const App = () => {
-  
+  const [email, setEmail] = useState('');
+  const [isValid, setIsValid] = useState(null);
   const [isLoggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     const log = localStorage.getItem('jwt');
@@ -63,7 +64,19 @@ const App = () => {
       </div>
     );
   };
-  
+  const handleInputChange = (e) => {
+    setEmail(e.target.value);
+    handleEvaluate(); // Reset validation status when the user types a new email
+  };
+
+  const handleEvaluate = () => {
+    const gmailRegex = /^[a-zA-Z0-9_.+-]+@gmail\.co$/;
+    const isValidGmail = gmailRegex.test(email);
+    setIsValid(isValidGmail);
+    console.log(email)
+  };
+
+
   return (
     
     <GoogleOAuthProvider clientId="746005843544-atk5tu7gc0svtpk01mmklttvnavcri75.apps.googleusercontent.com">
@@ -71,7 +84,6 @@ const App = () => {
           {isLoggedIn ? (
             <>
             <Website />
-              {/* <Button onClick={() => setLoggedIn(false)}>Logout</Button> */}
               
             </>
           ) : (
@@ -90,11 +102,13 @@ const App = () => {
             <form>
               {/* Email input */}
               <div className="form-outline mb-4">
-                <input
-                  type="email"
-                  id="form1Example13"
-                  className="form-control form-control-lg"
-                />
+              <input
+                      type="email"
+                      id="form1Example13"
+                      className="form-control form-control-lg"
+                      value={email}
+                      onChange={handleInputChange}
+                    />
                 <label className="form-label" htmlFor="form1Example13">
                   Email address
                 </label>
@@ -113,7 +127,6 @@ const App = () => {
               </div>
 
               <div className="d-flex justify-content-around align-items-center mb-4">
-                {/* Checkbox */}
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -130,12 +143,28 @@ const App = () => {
               </div>
 
               {/* Submit button */}
-              <button
-                type="submit"
-                className="btn btn-primary btn-lg btn-block"
-              >
-                Sign in
-              </button>
+              {isValid ? (
+                    <>
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-lg btn-block"
+                      >
+                        Sign in
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;
+                      <button
+                        type="submit"
+                        className="btn btn-danger btn-block"
+                      >
+                        Get OTP
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      Enter valid Email 
+                    </>
+                  )}
 
               <div className="divider d-flex align-items-center my-4">
                 <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>

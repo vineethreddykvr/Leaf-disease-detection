@@ -33,6 +33,10 @@ function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const logout =()=>{
+    localStorage.removeItem('jwt')
+    window.location.reload();
+  }
 
   return (
     <nav className={`navbar ${shouldShrink ? "shrink" : ""}`}>
@@ -72,6 +76,9 @@ function Navbar() {
               {" "}
               devTeam
             </NavLink>
+          </li>
+          <li>
+          <button onClick={logout}>logout</button>
           </li>
           </ul>
       </div>
