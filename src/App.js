@@ -6,36 +6,86 @@ import "./app.css"
 import Website from "./Website";
 import { jwtDecode } from "jwt-decode";
 
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRef } from "react";
 // App component
 const App = () => {
   const [email, setEmail] = useState('');
-  const [isValid, setIsValid] = useState(null);
   const [isLoggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     const log = localStorage.getItem('jwt');
+    
     if (log) {
       setLoggedIn(true);
     } else {
       setLoggedIn(false);
     }
+  }, 2000);
+
+  const [userLocation, setUserLocation] = useState(null);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      (async function fetchData() {
+        try {
+          const response = await axios.post('https://gapi.oneindia.com/gapi');
+         setUserLocation(response.data);
+
+          if (response.data && response.data.state && response.data.city) {
+            const { state, city, country,ip } = response.data;
+            toast.success(`Location: ${city}, ${state}, ${country + 'DIA'}`, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+           
+            
+          } else {
+            console.error('State or city information not available in the API response.');
+          }
+        } catch (error) {
+          console.error('Error fetching user location:', error);
+        }
+      })();
+    }
+  }, []);
+  
+
+  async function userdata(e){
+    const userloc = await axios.post('http://localhost:5000/store/userlocation', {
+      userLocation: userLocation, 
+      email: e,
+    });
+      userloc.then(()=>{
+    console.log("posted use location")
+}).catch(()=>{
+  console.log("error in postiong location")
+
+})
+  }
 
   const handleGoogleLogin = async (credentialResponse) => {
     try {
-      console.log(credentialResponse);
+      console.log(credentialResponse.clientId);
       const decoded = jwtDecode(credentialResponse.credential)
       setLoggedIn(true);
-      const jwtToken = credentialResponse;
+      localStorage.setItem('userid',credentialResponse.clientId)
       const response = await axios.post('http://localhost:5000/store-jwt', { decoded }, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (response) {
         console.log('JWT stored successfully on the server');
+        showToastMessage(response);
+        await userdata(decoded.email)
       } else {
         console.log('Failed to store JWT on the server');
       }
@@ -66,16 +116,68 @@ const App = () => {
   };
   const handleInputChange = (e) => {
     setEmail(e.target.value);
-    handleEvaluate(); // Reset validation status when the user types a new email
-  };
-
-  const handleEvaluate = () => {
-    const gmailRegex = /^[a-zA-Z0-9_.+-]+@gmail\.co$/;
-    const isValidGmail = gmailRegex.test(email);
-    setIsValid(isValidGmail);
     console.log(email)
   };
 
+
+
+ const alerthandler=()=>{
+    alert("sigin with google and reset your password")
+  }
+
+  const showToastMessage = (e) => {
+    console.log(e)
+    toast.success(e.data.message, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+    toast.success(`Hello ${e.data.name}`, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+  const [password, setPassword] = useState('');
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+  if(password && email)
+  {  try {
+      const response = await axios.post(
+        'http://localhost:5000/login/user',
+        {
+          email: email,
+          password: password,
+        }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        localStorage.setItem('jwt',response.data.token);
+        toast.success(`Hello ${response.data.name}`, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); 
+        }
+        else {
+          toast.error(response.data.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+        console.log(response.data);
+    } catch (error) {
+      console.error('Error during login:', error);
+    }}
+    else {
+      toast.warning(`Enter credentials`, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+  
 
   return (
     
@@ -84,10 +186,12 @@ const App = () => {
           {isLoggedIn ? (
             <>
             <Website />
+            
               
             </>
           ) : (
             <>
+          
             <section className="vh-100">
       <div className="container py-5 h-100">
         <div className="row d-flex align-items-center justify-content-center h-100">
@@ -99,16 +203,16 @@ const App = () => {
             />
           </div>
           <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-            <form>
+            <form onSubmit={handleFormSubmit}>
               {/* Email input */}
               <div className="form-outline mb-4">
               <input
-                      type="email"
-                      id="form1Example13"
-                      className="form-control form-control-lg"
-                      value={email}
-                      onChange={handleInputChange}
-                    />
+  type="email"
+  id="form1Example13"
+  className="form-control form-control-lg"
+  value={email}
+  onChange={handleInputChange}
+/>
                 <label className="form-label" htmlFor="form1Example13">
                   Email address
                 </label>
@@ -116,13 +220,15 @@ const App = () => {
 
               {/* Password input */}
               <div className="form-outline mb-4">
-                <input
-                  type="password"
-                  id="form1Example23"
-                  className="form-control form-control-lg"
-                />
+              <input
+  type="password"
+  id="form1Example23"
+  className="form-control form-control-lg"
+  value={password}
+  onChange={handlePasswordChange}
+/>
                 <label className="form-label" htmlFor="form1Example23">
-                  OTP
+                  password
                 </label>
               </div>
 
@@ -139,32 +245,17 @@ const App = () => {
                     Remember me
                   </label>
                 </div>
-                <a href="#!">Resend OTP?</a>
+              <a href="" onClick={alerthandler}>Forgot password?</a>
               </div>
 
-              {/* Submit button */}
-              {isValid ? (
-                    <>
+            
                       <button
                         type="submit"
                         className="btn btn-primary btn-lg btn-block"
                       >
                         Sign in
                       </button>
-                      &nbsp;&nbsp;&nbsp;
-                      &nbsp;&nbsp;&nbsp;
-                      <button
-                        type="submit"
-                        className="btn btn-danger btn-block"
-                      >
-                        Get OTP
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      Enter valid Email 
-                    </>
-                  )}
+                    
 
               <div className="divider d-flex align-items-center my-4">
                 <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>

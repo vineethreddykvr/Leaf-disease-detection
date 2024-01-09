@@ -6,7 +6,8 @@ import About from "./about";
 import LoadingAnimation from "./loadinganimation";
 import { useLocation } from "react-router-dom";
 import Blogs from "./blogs";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
@@ -33,10 +34,23 @@ function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const logout =()=>{
-    localStorage.removeItem('jwt')
-    window.location.reload();
-  }
+  
+  const showToastMessage = () => {
+    toast.success("Thankyou Visit Again!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });}
+
+    const logout = () => {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('userid');
+
+      showToastMessage();
+
+          setTimeout(() => {
+        window.location.reload();
+      }, 3000); 
+    };
+    
 
   return (
     <nav className={`navbar ${shouldShrink ? "shrink" : ""}`}>
@@ -74,7 +88,7 @@ function Navbar() {
               })}
             >
               {" "}
-              devTeam
+              My profile
             </NavLink>
           </li>
           <li>
