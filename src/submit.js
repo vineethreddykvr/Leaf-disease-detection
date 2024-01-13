@@ -42,9 +42,6 @@ const Submit = ({ onClose }) => {
     return (
       <div className="popup-overlay popup-overla">
         <div className="popup-content popup-conten">
-          <div className="popup-header popup-heade">
-            <h3>Popup Heading</h3>
-          </div>
           <div className="popup-body popup-bod">
           <div className="row">
             <div className="col-lg-6 col-md-6 col-sm-12">

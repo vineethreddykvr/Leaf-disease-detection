@@ -42,7 +42,7 @@ const App = () => {
           if (response.data && response.data.state && response.data.city) {
             const { state, city, country,ip } = response.data;
             toast.success(`Location: ${city}, ${state}, ${country + 'DIA'}`, {
-              position: toast.POSITION.TOP_RIGHT,
+              position: toast.POSITION.TOP_LEFT,
             });
            
             
@@ -73,10 +73,10 @@ const App = () => {
   const handleGoogleLogin = async (credentialResponse) => {
     try {
       console.log(credentialResponse.clientId);
+      const jwt = credentialResponse.credential;
       const decoded = jwtDecode(credentialResponse.credential)
       setLoggedIn(true);
-      localStorage.setItem('userid',credentialResponse.clientId)
-      const response = await axios.post('http://localhost:5000/store-jwt', { decoded }, {
+      const response = await axios.post('http://localhost:5000/store-jwt', { decoded,jwt }, {
         headers: {
           'Content-Type': 'application/json',
         },

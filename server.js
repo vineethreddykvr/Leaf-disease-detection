@@ -12,6 +12,7 @@ mongoose.connect('mongodb://localhost:27017/leaf-disease-detection', {
 });
 app.use(cors())
 const userSchema = new mongoose.Schema({
+  jwt:String,
   name: String,
   password : String,
   family_name: String,
@@ -28,6 +29,7 @@ const userLocationSchema = new mongoose.Schema({
   city: String,
   latitude: String,
   longitude: String,
+  date: { type: Date, default: Date.now }
 });
 
 const UserLocation = mongoose.model('UserLocation', userLocationSchema);
@@ -48,6 +50,7 @@ app.post('/store-jwt', async (req, res) => {
       res.status(200).json({ success: true, message: 'We are happy to see You again',name:data.decoded.name });
     } else {
       const newUser = new User({
+        jwt:data.jwt,
         name: data.decoded.name,
         localName: data.decoded.locale,
         family_name: data.decoded.given_name,
@@ -69,20 +72,7 @@ app.post('/store/userlocation', async (req, res) => {
   try {
     const { userLocation, email } = req.body;
 
-    const existingUser = await UserLocation.findOne({ email: email });
-
-    if (existingUser) {
-      existingUser.state = userLocation.state;
-      existingUser.country = userLocation.country;
-      existingUser.ip = userLocation.ip;
-      existingUser.city = userLocation.city;
-      existingUser.latitude = userLocation.latitude;
-      existingUser.longitude = userLocation.longitude;
-
-      await existingUser.save();
-
-      res.status(200).json({ success: true, message: 'User location data updated successfully.' });
-    } else {
+    
       const newUserLocation = new UserLocation({
         email: email,
         state: userLocation.state,
@@ -91,15 +81,34 @@ app.post('/store/userlocation', async (req, res) => {
         city: userLocation.city,
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
+        date: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
       });
 
       await newUserLocation.save();
 
       res.status(200).json({ success: true, message: 'User location data stored successfully.' });
-    }
+    
   } catch (error) {
     console.error('Error storing user location data:', error);
     res.status(500).json({ success: false, message: 'Error storing user location data.' });
+  }
+});
+
+app.get('/api/getUserData', async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const existingUser = await UserLocation.find({ email: email });
+
+    if (existingUser) {
+      res.json({ existingUser });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -110,9 +119,8 @@ app.post('/login/user', async (req, res) => {
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       if (existingUser.password === password) {
-        const token = jwt.sign({ email: existingUser.email, name: existingUser.name }, 'your_secret_key', { expiresIn: '1h' });
 
-        res.status(200).json({ success: true, message: 'We are happy to see you again', name: existingUser.name, token: token });
+        res.status(200).json({ success: true, message: 'We are happy to see you again', name: existingUser.name, token: existingUser.jwt });
       } else {
         res.status(200).json({ success: false, message: 'Invalid password.' });
       }

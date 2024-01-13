@@ -6,8 +6,9 @@ import About from "./about";
 import LoadingAnimation from "./loadinganimation";
 import { useLocation } from "react-router-dom";
 import Blogs from "./blogs";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from 'jwt-decode';
+
 function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
@@ -35,22 +36,8 @@ function Navbar() {
     };
   }, []);
   
-  const showToastMessage = () => {
-    toast.success("Thankyou Visit Again!", {
-      position: toast.POSITION.TOP_RIGHT,
-    });}
-
-    const logout = () => {
-      localStorage.removeItem('jwt');
-      localStorage.removeItem('userid');
-
-      showToastMessage();
-
-          setTimeout(() => {
-        window.location.reload();
-      }, 3000); 
-    };
-    
+  const decode = localStorage.getItem('jwt')
+  const data = jwtDecode(decode)
 
   return (
     <nav className={`navbar ${shouldShrink ? "shrink" : ""}`}>
@@ -80,7 +67,7 @@ function Navbar() {
               Blogs <i className="fab fa-blogger-b"></i>{" "}
             </NavLink>
           </li>         
-          <li>
+          <li><img className="profilepic" src={data.picture} alt="" />
             <NavLink
               to="/devteam"
                style={({ isActive }) => ({
@@ -91,9 +78,7 @@ function Navbar() {
               My profile
             </NavLink>
           </li>
-          <li>
-          <button onClick={logout}>logout</button>
-          </li>
+        
           </ul>
       </div>
       <i className="menu-hamburger fa fa-bars" onClick={handleHamburgerClick}></i>

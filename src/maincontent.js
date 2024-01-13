@@ -15,7 +15,9 @@ function Mainc() {
   };
 
   return (
+
     <div className="container">
+      <br /><br /><br />
       <div className="row">
         <div className="col">
           <div className="Home-bodycontent">

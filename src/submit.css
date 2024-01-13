@@ -17,8 +17,7 @@
   .popup-conten {
     width: 90%;
     margin-top: 62px;
-    height: 79%;
-    max-height: 1000px;
+    height: max-content;
     background-color: rgba(0,0,0,0.6);
     padding: 20px;
     border-radius: 8px;
@@ -57,11 +56,20 @@
    height:450px;
   }
 
-  @media screen and (width <1000px) {
+  @media screen and (width <1450px) {
 
     .imag-model{
-      width:420px;
+      width:400px;
+      height:500px;
+     }
+  }
+
+  @media screen and (width <1030px) {
+
+    .imag-model{
+      width:400px;
       margin-left: -20px;
-      height:440px;
+      height:400px;
+      display: flex;
      }
   }

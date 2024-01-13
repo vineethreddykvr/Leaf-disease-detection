@@ -38,11 +38,7 @@ function Croul() {
         <Carousel.Caption>
           <h3>PlantProphet-AgriRisk</h3>
           <p>
-          "The power of predictive analytics in agriculture: Identifying and combating crop diseases for sustainable farming."
-
-
-
-</p>
+          "The power of predictive analytics in agriculture: Identifying and combating crop diseases for sustainable farming."</p>
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>
