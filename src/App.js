@@ -161,6 +161,7 @@ const App = () => {
         setTimeout(() => {
           window.location.reload();
         }, 3000); 
+        userdata(email)
         }
         else {
           toast.error(response.data.message, {
