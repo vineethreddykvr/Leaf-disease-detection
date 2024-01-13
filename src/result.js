@@ -111,6 +111,8 @@
 
 import React from "react";
 import './submit.css';
+import Submit from "./submit";
+import { useState } from "react";
 
 const EmptyPopup = ({ onClose, res }) => {
   let imageSource1, cause, prevention, precaution, text;
@@ -287,6 +289,16 @@ const EmptyPopup = ({ onClose, res }) => {
     }
   }
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <div className="popup-overlay popup-overla " style={{color:'white'}}>
       <div className="popup-content popup-conten">
@@ -298,7 +310,7 @@ const EmptyPopup = ({ onClose, res }) => {
             <div className="container" style={{display: 'flex' }}>
               <div className="left-half" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <h2 style={{ marginLeft: 20 }}>Disease Name: <span style={{ color: 'white' }}>{res}</span></h2>
-                <img src={imageSource1} alt="Result Image" style={{ maxWidth: '100%', height: 350, marginTop: 20, width: 500}} />
+                <img src={imageSource1} alt="Result Img" style={{ maxWidth: '100%', height: 350, marginTop: 20, width: 500}} />
               </div>
               {cause || prevention || precaution ? (
                 <div className="right-half" style={{ flex: 1, marginTop: 80}}>
@@ -315,11 +327,17 @@ const EmptyPopup = ({ onClose, res }) => {
           </div>
         </div>
         <div className="popup-footer popup-foote ">
+        <button className="btn btn-danger btn-get-started animate__animated animate__fadeInUp scrollto" onClick={openPopup}>
+         Re Upload
+        </button>
+
           <button className="btn btn-primary" onClick={onClose}>
             Cancel
           </button>
         </div>
       </div>
+      {isPopupOpen && <Submit onClose={closePopup} />}
+
     </div>
   );
 };

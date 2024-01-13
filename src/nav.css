@@ -9,6 +9,9 @@ a
   text-decoration:none;
   margin-top: -10px;
 }
+body {
+  overflow-x: hidden; /* This can prevent horizontal scrollbar */
+}
 
 .navbar
 {

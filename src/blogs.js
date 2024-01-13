@@ -112,6 +112,7 @@ function Blogs(){
         <IMGR title={article.title} src={article.image_url} alt={article.image_url} no={index} news={article.news} />
        
       ))}
+    
     </div>
         
     
