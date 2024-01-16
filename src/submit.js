@@ -1,44 +1,58 @@
 import React, { useState } from "react";
 import './submit.css'
+import { ToastContainer, toast } from 'react-toastify';
 import EmptyPopup from "./result";
+import axios from "axios";
 const Submit = ({ onClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [imagedata,setimagedata] = useState();
+  const [image, setImage] = useState(null);
   const [showEmptyPopup, setShowEmptyPopup] = useState(false);
   const [ans, setAns] = useState("");
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      setSelectedFile(file);
+      reader.onloadend = () => {
+        const base64String = reader.result.split(",")[1];
+        setImage(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = () => {
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      fetch("http://127.0.0.1:5000/upload", {
+    if (image) {
+      axios({
         method: "POST",
-        body: formData
+        url: "https://classify.roboflow.com/rice-leaf-disease-detection/1",
+        params: {
+          api_key: "oo5I6zVakuJi0CSqLPq7"
+        },
+        data: image,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
       })
-        .then(response => response.json())
-        .then(data => {
-          // Handle the response from the server
-
-          const classLabel = data.class_label;
-          setAns(classLabel);
+      
+        .then(response => {
+          setAns(response.data);
           setShowEmptyPopup(true);
-          // Update your state or perform any other necessary actions with the response data
         })
         .catch(error => {
-          // Handle any errors
           console.error(error);
+          toast.error( "Error IN SENDING THE IMAGE FOR VERIFICATION" , {
+            position: toast.POSITION.TOP_LEFT,
+          });
         });
     }
   };
 
   if (showEmptyPopup) {
-    return <EmptyPopup onClose={onClose} res={ans} />;
+    return <EmptyPopup onClose={onClose} res={ans} img={image} />;
   }
-
-
     return (
       <div className="popup-overlay popup-overla">
         <div className="popup-content popup-conten">

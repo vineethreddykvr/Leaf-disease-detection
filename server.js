@@ -1,8 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors=require('cors')
+const cors=require('cors');
 const app = express();
 const PORT = 5000;
 
@@ -37,6 +36,8 @@ const UserLocation = mongoose.model('UserLocation', userLocationSchema);
 const User = mongoose.model('User', userSchema);
 
 app.use(express.json());
+
+
 
 
 
