@@ -173,18 +173,21 @@ const About = () => {
         </thead>
         <tbody>
         
-        {users.map((user) => (
-            <tr key={user._id}>
-              {/* <td>{user.email}</td> */}
-              <td>{user.city}</td>
-              <td>{user.state}</td>
-              {/* <td>{user.country}</td> */}
-              <td>{user.ip}</td>
-              <td>{user.latitude}</td>
-              <td>{user.longitude}</td>
-              <td>{user.date}</td>
-            </tr>
-          ))}
+        {users.map((user, no) => (
+  no < 5 ? (
+    <tr key={user._id}>
+      {/* <td>{user.email}</td> */}
+      <td>{user.city}</td>
+      <td>{user.state}</td>
+      {/* <td>{user.country}</td> */}
+      <td>{user.ip}</td>
+      <td>{user.latitude}</td>
+      <td>{user.longitude}</td>
+      <td>{user.date}</td>
+    </tr>
+  ) : null
+))}
+
          
         </tbody>
       </table>

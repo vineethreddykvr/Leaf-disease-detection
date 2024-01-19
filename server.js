@@ -5,7 +5,7 @@ const cors=require('cors');
 const app = express();
 const PORT = 5000;
 
-mongoose.connect('mongodb://localhost:27017/leaf-disease-detection', {
+mongoose.connect('mongodb+srv://kondetivineeth:TH9E49p0OynWuRAz@cluster0.jsd7gyq.mongodb.net/leaf-disease-detection', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
