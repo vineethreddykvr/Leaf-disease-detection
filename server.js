@@ -28,7 +28,6 @@ const userLocationSchema = new mongoose.Schema({
   city: String,
   latitude: String,
   longitude: String,
-  date: { type: Date, default: Date.now }
 });
 
 const UserLocation = mongoose.model('UserLocation', userLocationSchema);
@@ -82,7 +81,6 @@ app.post('/store/userlocation', async (req, res) => {
         city: userLocation.city,
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
-        date: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
       });
 
