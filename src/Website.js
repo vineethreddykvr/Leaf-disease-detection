@@ -3,6 +3,8 @@ import "./nav.css";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Home from "./home";
 import About from "./about";
+import { ToastContainer, toast } from "react-toastify";
+
 import LoadingAnimation from "./loadinganimation";
 import { useLocation } from "react-router-dom";
 import Blogs from "./blogs";
@@ -35,7 +37,20 @@ function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  
+
+  const showToastMessage = () => {
+    toast.success("Thankyou Visit Again!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });}
+
+  const logout = () => {
+    localStorage.removeItem('jwt');
+    
+    showToastMessage();
+    setTimeout(() => {
+      window.location.reload();
+    }, 4000); 
+  };
   const decode = localStorage.getItem('jwt')
   const data = jwtDecode(decode)
 
@@ -78,6 +93,7 @@ function Navbar() {
               My profile
             </NavLink>
           </li>
+          <button onClick={logout} style={{borderRadius:"10px",borderColor:"rgba(0, 0, 0, 0.5)"}}> logout</button>
         
           </ul>
       </div>

@@ -1,27 +1,13 @@
 import React from 'react';
 import "./about.css"
-import { ToastContainer, toast } from "react-toastify";
 import { jwtDecode } from 'jwt-decode';
 import { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useRouteLoaderData } from 'react-router-dom';
 const About = () => {
   const [users, setUserData] = useState([]);
-  const showToastMessage = () => {
-    toast.success("Thankyou Visit Again!", {
-      position: toast.POSITION.TOP_RIGHT,
-    });}
 
-    const logout = () => {
-      localStorage.removeItem('jwt');
-      
-      showToastMessage();
-
-          setTimeout(() => {
-        window.location.reload();
-      }, 3000); 
-    };
-
+    
     const decode = localStorage.getItem('jwt')
     const data = jwtDecode(decode)
 
@@ -82,7 +68,6 @@ const About = () => {
                             </div>
                         </div>
                         <div className="col-md-2">
-                            <button onClick={logout} className="profile-edit-btn" name="btnAddMore" >Log out</button>
 
                         </div>
                     </div>
