@@ -168,7 +168,6 @@ const About = () => {
             <th>IP</th>
             <th>Latitude</th>
             <th>Longitude</th>
-            <th>Date</th>
           </tr>
         </thead>
         <tbody>
@@ -183,7 +182,6 @@ const About = () => {
       <td>{user.ip}</td>
       <td>{user.latitude}</td>
       <td>{user.longitude}</td>
-      <td>{user.date}</td>
     </tr>
   ) : null
 ))}
