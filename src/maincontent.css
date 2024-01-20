@@ -5,7 +5,7 @@
     position: relative;
     backdrop-filter: blur(1.3px);
     text-align: center;
-    z-index: 990;
+    /* z-index: 990; */
   }
 .typewriter h2 {
     
@@ -43,6 +43,6 @@
         margin-left: 20px;
         position: relative;
         text-align: center;
-        z-index: 990;
+        /* z-index: 990; */
     }
   }
