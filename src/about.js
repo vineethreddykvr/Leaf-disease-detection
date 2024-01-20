@@ -5,9 +5,7 @@ import { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useRouteLoaderData } from 'react-router-dom';
 const About = () => {
-  const [users, setUserData] = useState([]);
-
-    
+  const [users, setUserData] = useState([]);    
     const decode = localStorage.getItem('jwt')
     const data = jwtDecode(decode)
 

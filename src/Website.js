@@ -116,6 +116,8 @@ export default function Website() {
     return () => clearTimeout(timer);
   }, []);
 
+  
+
   return (
     <>
       {isLoading ? (

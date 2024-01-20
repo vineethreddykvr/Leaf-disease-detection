@@ -6,10 +6,11 @@ import Croul from "./crousel";
 import Popup from "./popup";
 import Maincard from "./maincard";
 import Mainc from "./maincontent";
+import UserProfile from "./userprofile"
 function Home(){
     return(<>
     
-    <Popup />
+    {/* <Popup /> */}
     <KommunicateChat />
     
     
@@ -17,9 +18,10 @@ function Home(){
     <Croul />
     <Mainc />
     <br /><br />
-   
+    <UserProfile />
     <Maincard />
     <br /><br />
+    
    <Footer />
    <ScrollToTopButton />
 

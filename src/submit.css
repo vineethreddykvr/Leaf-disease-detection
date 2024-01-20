@@ -73,3 +73,13 @@
       display: flex;
      }
   }
+
+  @media screen and (width <430px) {
+
+    .imag-model{
+      width:290px;
+      margin-left: -20px;
+      height:400px;
+      display: flex;
+     }
+  }
