@@ -10,7 +10,7 @@ import UserProfile from "./userprofile"
 function Home(){
     return(<>
     
-    {/* <Popup /> */}
+    <Popup />
     <KommunicateChat />
     
     

@@ -90,7 +90,7 @@ const UserProfile = () => {
               <div className="card-container d-flex overflow-auto" >
                   {responseData.map((data, no) => (
                       data.status == 0 ? (
-                          <><div key={no} className="col">
+                          <><div className="col">
                               <div className="card" style={{ borderRadius: '15px', minWidth: '420px', marginRight: '10px' }}>
                                   <div className="card-body p-4">
                                       <div className="d-flex text-black">
@@ -162,7 +162,7 @@ const UserProfile = () => {
               <div className="card-container d-flex overflow-auto" >
                   {userconnect.map((data, no) => (
                       data.status != 0 ? (
-                          <><div key={no} className="col">
+                          <><div className="col">
                               <div className="card" style={{ borderRadius: '15px', minWidth: '420px', marginRight: '10px' }}>
                                   <div className="card-body p-4">
                                       <div className="d-flex text-black">
