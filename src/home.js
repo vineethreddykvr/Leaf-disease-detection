@@ -12,8 +12,6 @@ function Home(){
     
     <Popup />
     <KommunicateChat />
-    
-    
     <br /><br />
     <Croul />
     <Mainc />
@@ -21,7 +19,6 @@ function Home(){
     <UserProfile />
     <Maincard />
     <br /><br />
-    
    <Footer />
    <ScrollToTopButton />
 
