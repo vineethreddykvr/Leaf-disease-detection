@@ -27,7 +27,7 @@ const Submit = ({ onClose }) => {
     if (image) {
       axios({
         method: "POST",
-        url: "https://classify.roboflow.com/rice-leaf-disease-detection/1",
+        url: "https://classify.roboflow.com/rice-plant-leaf-disease-classification/1",
         params: {
           api_key: "oo5I6zVakuJi0CSqLPq7"
         },

@@ -13,11 +13,14 @@ const EmptyPopup = ({ onClose, res,img }) => {
   const closePopup = () => {
     setIsPopupOpen(false);
   };
+
+  console.log(res)
   const predictions = res.predictions || {};
   const predictedClasses = res.predicted_classes || [];
 
-  const highestConfidenceClass = predictedClasses.length > 0 ? predictedClasses[0] : "Unknown";
-  const highestConfidence = predictions[highestConfidenceClass]?.confidence || 0;
+  const highestConfidenceClass =  res.top;
+  const highestConfidence =  res.confidence
+  ;
 
   return (
     <div className="popup-overlay popup-overla " style={{ color: 'white' }}>
