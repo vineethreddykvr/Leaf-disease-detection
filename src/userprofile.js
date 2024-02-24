@@ -13,7 +13,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://leaf-disease-detection-77tt.onrender.com/api/getUserconnections', {
+                const response = await axios.get('http://localhost:5000/api/getUserconnections', {
                     params: {
                         email: userEmail,
                     }
@@ -32,7 +32,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://leaf-disease-detection-77tt.onrender.com/api/getMYrequests', {
+                const response = await axios.get('http://localhost:5000/api/getMYrequests', {
                     params: {
                         email: userEmail,
                     }
@@ -51,7 +51,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://leaf-disease-detection-77tt.onrender.com/api/connectiondata', {
+                const response = await axios.get('http://localhost:5000/api/connectiondata', {
                     params: {
                         email: userEmail,
                     }
