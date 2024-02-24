@@ -8,9 +8,9 @@ const About = () => {
   const [users, setUserData] = useState([]);    
     const decode = localStorage.getItem('jwt')
     const data = jwtDecode(decode)
-    
+
     useEffect( () => {
-      const users = axios.get("http://localhost:5000/api/getUserData",{
+      const users = axios.get("https://leaf-disease-detection-77tt.onrender.com/api/getUserData",{
         params: {
           email: data.email
         }

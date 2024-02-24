@@ -16,6 +16,8 @@ function Home(){
     <Croul />
     <Mainc />
     <Maincard />
+    <br />
+    <UserProfile />
     <br /><br />
    <Footer />
    <ScrollToTopButton />
