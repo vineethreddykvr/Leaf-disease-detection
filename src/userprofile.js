@@ -56,7 +56,6 @@ const UserProfile = () => {
                         email: userEmail,
                     }
                 });
-
                 setuserconnect(response.data.connectedUsers);
             } catch (error) {
                 console.error('Error fetching data:', error);
