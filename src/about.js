@@ -8,7 +8,7 @@ const About = () => {
   const [users, setUserData] = useState([]);    
     const decode = localStorage.getItem('jwt')
     const data = jwtDecode(decode)
-
+    
     useEffect( () => {
       const users = axios.get("http://localhost:5000/api/getUserData",{
         params: {
