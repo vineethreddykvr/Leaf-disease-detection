@@ -15,8 +15,6 @@ function Home(){
     <br /><br />
     <Croul />
     <Mainc />
-    <br /><br />
-    <UserProfile />
     <Maincard />
     <br /><br />
    <Footer />
