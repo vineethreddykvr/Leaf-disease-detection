@@ -1,1 +1,0 @@
-import './mainpagevideo.css'
