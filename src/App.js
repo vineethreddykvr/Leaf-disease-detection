@@ -16,7 +16,7 @@ const App = () => {
     let expire = localStorage.getItem("expire");
     if (expire) {
       var currentTime = Math.floor(Date.now() / 1000);
-      if (expire > currentTime) {
+      if (expire < currentTime) {
         localStorage.removeItem('userid')
       } else if (log) {
         setLoggedIn(true);

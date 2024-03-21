@@ -17,7 +17,6 @@ function Navbar() {
     var userid = localStorage.getItem('userid');
     if (userid) {
       setIsLoggedIn(true);
-      userid = "25202643-3ee5-46b8-b9fc-67fa9ff4f84e";
       var response = axios.get('http://localhost:5000/api/userprofile', { 
           params: {
                     userid: userid,
