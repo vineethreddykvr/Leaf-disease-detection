@@ -8,8 +8,7 @@ const _ = require('lodash');
 const PORT = 5000;
 
 var url = "mongodb://localhost:27017/leaf-disease-detection"
-var url = 'mongodb+srv://kondetivineeth:TH9E49p0OynWuRAz@cluster0.jsd7gyq.mongodb.net/leaf-disease-detection'
-mongoose.connect("mongodb://localhost:27017/leaf-disease-detection", {
+mongoose.connect("mongodb+srv://kondetivineeth:TH9E49p0OynWuRAz@cluster0.jsd7gyq.mongodb.net/leaf-disease-detection", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -322,7 +321,7 @@ app.post('/login/user', async (req, res) => {
     if (existingUser) {
       if (existingUser.password === password) {
 
-        res.status(200).json({ success: true, message: 'We are happy to see you again', name: existingUser.name, uid: existingUser?.uid, expire: existingUser?.exp });
+        res.status(200).json({ success: true, message: 'We are happy to see you again', name: existingUser.name, uid: existingUser?.uid, expire: existingUser?.exp, email: existingUser?.email});
       } else {
         res.status(200).json({ success: false, message: 'Invalid password.' });
       }

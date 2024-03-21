@@ -11,7 +11,7 @@ function Home(){
     return(<>
     
     <Popup />
-    <KommunicateChat />
+    {/* <KommunicateChat /> */}
     <br /><br />
     <Croul />
     <Mainc />

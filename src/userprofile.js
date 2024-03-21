@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
 const UserProfile = () => {
     const email = localStorage.getItem('email')

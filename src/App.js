@@ -165,6 +165,8 @@ const App = () => {
             position: toast.POSITION.TOP_RIGHT,
           });
           localStorage.setItem('userid', response.data.uid);
+          localStorage.setItem('email', response.data.email);
+          localStorage.setItem('expire', response.data.expire);
           toast.success(`Hello ${response.data.name}`, {
             position: toast.POSITION.TOP_RIGHT,
           });
