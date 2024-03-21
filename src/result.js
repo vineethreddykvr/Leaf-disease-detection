@@ -14,7 +14,6 @@ const EmptyPopup = ({ onClose, res,img }) => {
     setIsPopupOpen(false);
   };
 
-  console.log(res)
   const predictions = res.predictions || {};
   const predictedClasses = res.predicted_classes || [];
 

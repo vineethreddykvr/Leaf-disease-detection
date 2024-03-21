@@ -1,58 +1,63 @@
 import React from 'react';
 import "./about.css"
-import { jwtDecode } from 'jwt-decode';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useRouteLoaderData } from 'react-router-dom';
 const About = () => {
-  const [users, setUserData] = useState([]);    
-    const decode = localStorage.getItem('jwt')
-    const data = jwtDecode(decode)
+    const [users, setUserData] = useState([]);
+    const userid = localStorage.getItem('userid')
+    const [data, setdata] = useState()
+    useEffect(() => {
+        const apicall = axios.get("http://localhost:5000/api/getUserData", {
+            params: {
+                userid: userid
+            }
+        }).then(data => {
+            setUserData(data.data.existingUser)
+        })
 
-    useEffect( () => {
-      const users = axios.get("https://leaf-disease-detection-77tt.onrender.com/api/getUserData",{
-        params: {
-          email: data.email
-        }
-      }).then(data=>{
-        setUserData(data.data.existingUser)
-      })
+        const api = axios.get("http://localhost:5000/api/userprofile", {
+            params: {
+                userid: userid
+            }
+        }).then(data => {
 
-      
-    },[0]);
-   
+            setdata(data.data.userDetails)
+        })
+
+    }, [0]);
+
+
     const [currentTime, setCurrentTime] = useState(new Date());
 
     useEffect(() => {
-      const intervalId = setInterval(() => {
-        setCurrentTime(new Date());
-      }, 1000);
+        const intervalId = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
         return () => clearInterval(intervalId);
     }, []);
-  
+
     const formatTime = (date) => {
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      const seconds = date.getSeconds().toString().padStart(2, '0');
-  
-      return `${hours}:${minutes}:${seconds}`;
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+
+        return `${hours}:${minutes}:${seconds}`;
     };
-  
     return (
         <div className="body">
-          <br /><br />
+            <br /><br />
             <div className="emp-profile">
                 <form method="post">
                     <div className="row">
                         <div className="col-md-4">
                             <div className="profile-img">
-                            <img src={`${data.picture}`} alt="Profile" className="responsive-image" style={{ objectFit: 'cover', objectPosition: 'center' }} />
-                              
+                                <img src={`${data?.picture}`} alt="Profile" className="responsive-image" style={{ objectFit: 'cover', objectPosition: 'center' }} />
+
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="profile-head">
-                                <h5>{data.name}</h5>
+                                <h5>{data?.name}</h5>
                                 <h6>Web Developer and Designer</h6>
                                 <p className="proile-rating">LogIn Type : <span>Google</span></p>
                                 <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -60,7 +65,7 @@ const About = () => {
                                         <a className="nav-link active" id="home-tab" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">About</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Timeline : <h style={{color:'red'}}>{formatTime(currentTime)}</h></a>
+                                        <a className="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Timeline : <h style={{ color: 'red' }}>{formatTime(currentTime)}</h></a>
                                     </li>
                                 </ul>
                             </div>
@@ -92,7 +97,7 @@ const About = () => {
                                             <label>User Id</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>{data.iat}</p>
+                                            <p>{data?.uid}</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -100,15 +105,15 @@ const About = () => {
                                             <label>First Name</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>{data.given_name}</p>
+                                            <p>{data?.name}</p>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label>Second Name</label>
+                                            <label>Sur Name</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>{data.family_name}</p>
+                                            <p>{data?.family_name}</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -116,7 +121,7 @@ const About = () => {
                                             <label>Email</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>{data.email}</p>
+                                            <p>{data?.email}</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -137,43 +142,43 @@ const About = () => {
                                     </div>
                                 </div>
                                 <div>
-      
 
-                                <div>
-      <p>History Login</p>
-      <table className="user-table">
-        <thead>
-          <tr>
-            {/* <th>Email</th> */}
-            <th>City</th>
-            <th>State</th>
-            {/* <th>Country</th> */}
-            <th>IP</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-          </tr>
-        </thead>
-        <tbody>
-        
-        {users.map((user, no) => (
-  no < 5 ? (
-    <tr key={user._id}>
-      {/* <td>{user.email}</td> */}
-      <td>{user.city}</td>
-      <td>{user.state}</td>
-      {/* <td>{user.country}</td> */}
-      <td>{user.ip}</td>
-      <td>{user.latitude}</td>
-      <td>{user.longitude}</td>
-    </tr>
-  ) : null
-))}
 
-         
-        </tbody>
-      </table>
-    </div>
-                               </div>
+                                    <div>
+                                        <p>History Login</p>
+                                        <table className="user-table">
+                                            <thead>
+                                                <tr>
+                                                    {/* <th>Email</th> */}
+                                                    <th>City</th>
+                                                    <th>State</th>
+                                                    {/* <th>Country</th> */}
+                                                    <th>IP</th>
+                                                    <th>Latitude</th>
+                                                    <th>Longitude</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                {users.map((user, no) => (
+                                                    no < 5 ? (
+                                                        <tr key={user._id}>
+                                                            {/* <td>{user.email}</td> */}
+                                                            <td>{user.city}</td>
+                                                            <td>{user.state}</td>
+                                                            {/* <td>{user.country}</td> */}
+                                                            <td>{user.ip}</td>
+                                                            <td>{user.latitude}</td>
+                                                            <td>{user.longitude}</td>
+                                                        </tr>
+                                                    ) : null
+                                                ))}
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

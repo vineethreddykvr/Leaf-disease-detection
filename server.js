@@ -3,9 +3,13 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const cors=require('cors');
 const app = express();
+const { v4: uuidv4 } = require('uuid');
+const _ = require('lodash');
 const PORT = 5000;
 
-mongoose.connect('mongodb+srv://kondetivineeth:TH9E49p0OynWuRAz@cluster0.jsd7gyq.mongodb.net/leaf-disease-detection', {
+var url = "mongodb://localhost:27017/leaf-disease-detection"
+var url = 'mongodb+srv://kondetivineeth:TH9E49p0OynWuRAz@cluster0.jsd7gyq.mongodb.net/leaf-disease-detection'
+mongoose.connect("mongodb://localhost:27017/leaf-disease-detection", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -17,11 +21,13 @@ const userSchema = new mongoose.Schema({
   family_name: String,
   givenName: String,
   email: String,
+  exp:Number,
   picture: String,
+  uid:String
 });
 
 const userLocationSchema = new mongoose.Schema({
-  email: String,
+  uid:String,
   state: String,
   country: String,
   ip: String,
@@ -52,47 +58,47 @@ const connect = mongoose.model('connections', newDbSchema);
 app.use(express.json());
 
 
-app.get('/api/getMYrequests', async (req, res) => {
-  try {
-    const { email } = req.query;
+// app.get('/api/getMYrequests', async (req, res) => {
+//   try {
+//     const { email } = req.query;
 
-    const userConnections = await connect.findOne({ email });
+//     const userConnections = await connect.findOne({ email });
 
-    let bucket =[]
-    const connectionEmails = userConnections.connections.map(data=>{
-      if(data.status==2){
-        bucket.push(data.email)
-      }
-    });
-    let result = [];
-    if(bucket){
+//     let bucket =[]
+//     const connectionEmails = userConnections.connections.map(data=>{
+//       if(data.status==2){
+//         bucket.push(data.email)
+//       }
+//     });
+//     let result = [];
+//     if(bucket){
       
-    for (const email of bucket) {
-      const user = await User.findOne({ email }, 'name email picture status articles followers rating');
-      if (user.email !== email) {
-        result.push({
-          name: user.name,
-          email: user.email,
-          picture: user.picture,
-          status: user.status || 2,
-          articles: user.articles || 10,
-          followers: user.followers || 20,
-          rating: user.rating || 9.5,
-        });
-      }
-    }
+//     for (const email of bucket) {
+//       const user = await User.findOne({ email }, 'name email picture status articles followers rating');
+//       if (user.email !== email) {
+//         result.push({
+//           name: user.name,
+//           email: user.email,
+//           picture: user.picture,
+//           status: user.status || 2,
+//           articles: user.articles || 10,
+//           followers: user.followers || 20,
+//           rating: user.rating || 9.5,
+//         });
+//       }
+//     }
 
-    res.status(200).json(result);
-    }
-    else {
-      res.status(200).json([]);
+//     res.status(200).json(result);
+//     }
+//     else {
+//       res.status(200).json([]);
 
-    }
-  } catch (error) {
-    console.error('Error fetching user requests:', error);
-    res.status(500).json({ success: false, message: 'Error fetching user requests.' });
-  }
-});
+//     }
+//   } catch (error) {
+//     console.error('Error fetching user requests:', error);
+//     res.status(500).json({ success: false, message: 'Error fetching user requests.' });
+//   }
+// });
 
 
 app.get('/api/getUserconnections', async (req, res) => {
@@ -217,8 +223,9 @@ app.post('/store-jwt', async (req, res) => {
     const existingUser = await User.findOne({ email: userEmail });
 
     if (existingUser) {
-      res.status(200).json({ success: true, message: 'We are happy to see You again',name:data.decoded.name });
+      res.status(200).json({ success: true, message: 'We are happy to see You again',name:data.decoded.name, uid :existingUser?.uid , expire: existingUser?.exp, email: data.decoded.email});
     } else {
+      var uid = uuidv4()
       const newUser = new User({
         jwt:data.jwt,
         name: data.decoded.name,
@@ -227,6 +234,8 @@ app.post('/store-jwt', async (req, res) => {
         email: userEmail,
         picture: data.decoded.picture, 
         password:"agri-cropscan",
+        exp: data.decoded.exp,
+        uid: uid
       });
       await newUser.save();
 
@@ -237,7 +246,7 @@ app.post('/store-jwt', async (req, res) => {
       });
       await newConnection.save();
 
-      res.status(200).json({ success: true, message: 'Welcom to new onboarding.',name:data.decoded.name });
+      res.status(200).json({ success: true, message: 'Welcom to new onboarding.',name:data.decoded.name , uid:uid, expire:data.decoded.exp });
     }
   } catch (error) {
     console.error('Error handling JWT:', error);
@@ -247,11 +256,11 @@ app.post('/store-jwt', async (req, res) => {
 
 app.post('/store/userlocation', async (req, res) => {
   try {
-    const { userLocation, email } = req.body;
+    const { userLocation, uid } = req.body;
 
     
       const newUserLocation = new UserLocation({
-        email: email,
+        uid: uid,
         state: userLocation.state,
         country: userLocation.country,
         ip: userLocation.ip,
@@ -272,11 +281,11 @@ app.post('/store/userlocation', async (req, res) => {
 });
 
 app.get('/api/getUserData', async (req, res) => {
-  const { email } = req.query;
+  const { userid } = req.query;
 
   try {
-    const existingUser = await UserLocation.find({ email: email });
-
+    const existingUser = await UserLocation.find({ uid: userid });
+    
     if (existingUser) {
       res.json({ existingUser });
     } else {
@@ -288,6 +297,21 @@ app.get('/api/getUserData', async (req, res) => {
   }
 });
 
+app.get('/api/userprofile', async (req, res) => {
+  const { userid } = req.query;
+  try {
+    const userdetails = await User.findOne({uid: userid })
+    if (userdetails) {
+      const userDetails = _.omit(userdetails.toObject(), ['jwt', '__v', 'password', '_id']); 
+      res.json({ userDetails });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 app.post('/login/user', async (req, res) => {
@@ -298,7 +322,7 @@ app.post('/login/user', async (req, res) => {
     if (existingUser) {
       if (existingUser.password === password) {
 
-        res.status(200).json({ success: true, message: 'We are happy to see you again', name: existingUser.name, token: existingUser.jwt });
+        res.status(200).json({ success: true, message: 'We are happy to see you again', name: existingUser.name, uid: existingUser?.uid, expire: existingUser?.exp });
       } else {
         res.status(200).json({ success: false, message: 'Invalid password.' });
       }

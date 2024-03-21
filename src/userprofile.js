@@ -3,17 +3,16 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
 const UserProfile = () => {
-    const decode = localStorage.getItem('jwt')
-    const data = jwtDecode(decode)
+    const email = localStorage.getItem('email')
     const [responseData, setResponseData] = useState([]);
     const [userconnect, setuserconnect] = useState([]);
     const [userpending,setuserpending] = useState([])
 
-    const userEmail = data.email;
+    const userEmail = email;
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://leaf-disease-detection-77tt.onrender.com/api/getUserconnections', {
+                const response = await axios.get('http://localhost:5000/api/getUserconnections', {
                     params: {
                         email: userEmail,
                     }
@@ -32,7 +31,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://leaf-disease-detection-77tt.onrender.com/api/getMYrequests', {
+                const response = await axios.get('http://localhost:5000/api/getMYrequests', {
                     params: {
                         email: userEmail,
                     }
@@ -44,14 +43,14 @@ const UserProfile = () => {
             }
         };
 
-        fetchData();
+        // fetchData();
 
     }, [0]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://leaf-disease-detection-77tt.onrender.com/api/connectiondata', {
+                const response = await axios.get('http://localhost:5000/api/connectiondata', {
                     params: {
                         email: userEmail,
                     }
@@ -76,7 +75,6 @@ const UserProfile = () => {
                 statusCode: statusCode,
                 image
             });
-            console.log(response.data);
         } catch (error) {
             console.error('Error interacting with user:', error);
         }

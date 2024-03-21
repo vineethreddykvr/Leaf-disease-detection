@@ -1,33 +1,30 @@
-// Import necessary dependencies
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { GoogleLogin, GoogleOAuthProvider, useGoogleOAuth } from '@react-oauth/google';
 import "./app.css"
 import Website from "./Website";
 import { jwtDecode } from "jwt-decode";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRef } from "react";
-// App component
+
 const App = () => {
   const [email, setEmail] = useState('');
   const [isLoggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
-    const log = localStorage.getItem('jwt');
-    
-    if (log) {
-      const decodedData = jwtDecode(log)
+    const log = localStorage.getItem('userid');
+    let expire = localStorage.getItem("expire");
+    if (expire) {
       var currentTime = Math.floor(Date.now() / 1000);
-      if (decodedData.exp < currentTime) {
-        localStorage.removeItem('jwt')
+      if (expire > currentTime) {
+        localStorage.removeItem('userid')
       } else if (log) {
         setLoggedIn(true);
       }
     } else {
       setLoggedIn(false);
     }
-  }, 2000);
+  }, [0]);
 
   const [userLocation, setUserLocation] = useState(null);
   const isMounted = useRef(true);
@@ -64,12 +61,12 @@ const App = () => {
 
 
   async function userdata(e) {
-    const userloc = await axios.post('http://localhost:5000/store/userlocation', {
+    const userloc =  axios.post('http://localhost:5000/store/userlocation', {
       userLocation: userLocation,
-      email: e,
+      uid: e,
     });
     userloc.then(() => {
-      console.log("posted use location")
+      console.log("posted user location")
     }).catch(() => {
       console.log("error in postiong location")
 
@@ -78,7 +75,6 @@ const App = () => {
 
   const handleGoogleLogin = async (credentialResponse) => {
     try {
-      console.log(credentialResponse.clientId);
       const jwt = credentialResponse.credential;
       const decoded = jwtDecode(credentialResponse.credential)
       setLoggedIn(true);
@@ -87,11 +83,21 @@ const App = () => {
           'Content-Type': 'application/json',
         },
       });
-
       if (response) {
         console.log('JWT stored successfully on the server');
         showToastMessage(response);
-        await userdata(decoded.email)
+        await userdata(response?.data?.uid).then(()=>{
+          console.log("userdata api call")
+          setLoggedIn(true)
+        }).catch((e)=>{
+          console.log(e)
+        })
+        localStorage.setItem("userid",response?.data?.uid)
+        localStorage.setItem("expire",response?.data?.expire)
+        localStorage.setItem("email",response?.data?.email)
+
+
+        setLoggedIn(true)
       } else {
         console.log('Failed to store JWT on the server');
       }
@@ -110,8 +116,6 @@ const App = () => {
         <GoogleLogin
           onSuccess={(credentialResponse) => {
             handleGoogleLogin(credentialResponse)
-            setLoggedIn(true)
-            localStorage.setItem("jwt", credentialResponse.credential)
           }
           }
           onError={() => {
@@ -123,7 +127,6 @@ const App = () => {
   };
   const handleInputChange = (e) => {
     setEmail(e.target.value);
-    console.log(email)
   };
 
 
@@ -161,7 +164,7 @@ const App = () => {
           toast.success(response.data.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
-          localStorage.setItem('jwt', response.data.token);
+          localStorage.setItem('userid', response.data.uid);
           toast.success(`Hello ${response.data.name}`, {
             position: toast.POSITION.TOP_RIGHT,
           });
@@ -175,7 +178,6 @@ const App = () => {
             position: toast.POSITION.TOP_RIGHT,
           });
         }
-        console.log(response.data);
       } catch (error) {
         console.error('Error during login:', error);
       }

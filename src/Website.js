@@ -6,7 +6,7 @@ import About from "./about";
 import Blogs from "./blogs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
 
 function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -14,11 +14,18 @@ function Navbar() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
+    var userid = localStorage.getItem('userid');
+    if (userid) {
       setIsLoggedIn(true);
-      const decodedData = jwtDecode(token);
-      setUserData(decodedData);
+      userid = "25202643-3ee5-46b8-b9fc-67fa9ff4f84e";
+      var response = axios.get('http://localhost:5000/api/userprofile', { 
+          params: {
+                    userid: userid,
+           }
+      });
+      response.then((data)=> {
+        setUserData(data.data.userDetails)
+      })
     }
   }, []);
 
@@ -27,7 +34,7 @@ function Navbar() {
   };
 
   const logout = () => {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('userid');
     setIsLoggedIn(false);
     showToastMessage("Logout successful!");
   };
