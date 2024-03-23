@@ -18,6 +18,7 @@
   width: 20px;
   border-radius: 25px;
 }
+
 .emp-profile {
   padding: 3%;
   margin-top: 3%;
@@ -135,4 +136,20 @@
 .profile-tab p {
   font-weight: 600;
   color: #0062cc;
+}
+
+.buttonlog{
+  color: white;
+  border: none;
+  background-color: #509ae4;
+  border-radius: 2px;
+}
+.fa-bell{
+  color: whitesmoke;
+}
+
+.button-notify{
+  background-color: rgb(0, 0, 0, 0.1);
+  border: none;
+  height: 0px;
 }

@@ -57,47 +57,55 @@ const connect = mongoose.model('connections', newDbSchema);
 app.use(express.json());
 
 
-// app.get('/api/getMYrequests', async (req, res) => {
-//   try {
-//     const { email } = req.query;
+app.get('/api/getMYrequests', async (req, res) => {
+  try {
+    const { email } = req.query;
 
-//     const userConnections = await connect.findOne({ email });
+    const userConnections = await connect.find({ email: { $ne: email } });
+    // console.log(userConnections)
 
-//     let bucket =[]
-//     const connectionEmails = userConnections.connections.map(data=>{
-//       if(data.status==2){
-//         bucket.push(data.email)
-//       }
-//     });
-//     let result = [];
-//     if(bucket){
+    let bucket =[]
+    // const connectionEmails = userConnections.connections?.map((data,err)=>{
+    //   console.log(userConnections)
+    //   if(data.status==1){
+    //     bucket.push(data.email)
+    //   } else {
+
+    //   }
+
+    // console.log(userConnections)
+    // bucket.push(userConnections)
+
+    // });
+    // let result = [];
+    if(userConnections){
       
-//     for (const email of bucket) {
-//       const user = await User.findOne({ email }, 'name email picture status articles followers rating');
-//       if (user.email !== email) {
-//         result.push({
-//           name: user.name,
-//           email: user.email,
-//           picture: user.picture,
-//           status: user.status || 2,
-//           articles: user.articles || 10,
-//           followers: user.followers || 20,
-//           rating: user.rating || 9.5,
-//         });
-//       }
-//     }
+    // for (const email of bucket) {
+    //   const user = await User.findOne({ email }, 'name email picture status articles followers rating');
+    //   if (user.email !== email) {
+    //     result.push({
+    //       name: user.name,
+    //       email: user.email,
+    //       picture: user.picture,
+    //       status: user.status || 2,
+    //       articles: user.articles || 10,
+    //       followers: user.followers || 20,
+    //       rating: user.rating || 9.5,
+    //     });
+    //   }
+    // }
 
-//     res.status(200).json(result);
-//     }
-//     else {
-//       res.status(200).json([]);
+    res.status(200).json(userConnections);
+    }
+    else {
+      res.status(200).json([]);
 
-//     }
-//   } catch (error) {
-//     console.error('Error fetching user requests:', error);
-//     res.status(500).json({ success: false, message: 'Error fetching user requests.' });
-//   }
-// });
+    }
+  } catch (error) {
+    console.error('Error fetching user requests:', error);
+    res.status(500).json({ success: false, message: 'Error fetching user requests.' });
+  }
+});
 
 
 app.get('/api/getUserconnections', async (req, res) => {

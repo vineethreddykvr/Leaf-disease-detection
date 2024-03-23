@@ -1,0 +1,56 @@
+.contact{
+    padding: 8%;
+    background-color: rgba(244, 236, 236, 0.1);
+    box-shadow: 1px 1px 1px 1px ;
+    border-radius: 9px;
+    margin-top: 12px;
+    backdrop-filter: blur(6px);
+    height: 590px;
+    
+}
+.form-control{
+  height: 45px;
+}
+.Message{
+  height: 90px;
+}
+.text-form{
+  margin-top: -80px;
+}
+.vinnu{
+    padding: 4%;
+
+  background-color: transparent;
+    background-image: url(https://images.unsplash.com/photo-1504253163759-c23fccaebb55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80);
+    background-size: 100%;
+ 
+   
+}
+.on-sub:hover{
+  border-color: aqua;
+  box-shadow: 5px 5px 4px 3px;
+}
+.mb-3{
+  padding: 10px;
+}
+@media screen and (width <1200px) {
+
+  .contact{
+    margin-top: 120px;
+    height: 550px;
+}
+}
+
+.badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 8px;
+  font-size: 12px;
+  position: absolute;
+  top: 34px;
+  right: 160px;
+}
+.fa-bell{
+  margin-left: -30px
+}

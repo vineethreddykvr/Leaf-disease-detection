@@ -32,25 +32,6 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/getMYrequests', {
-                    params: {
-                        email: userEmail,
-                    }
-                });
-
-                setuserpending(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        // fetchData();
-
-    }, [0]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
                 const response = await axios.get('http://localhost:5000/api/connectiondata', {
                     params: {
                         email: userEmail,
@@ -81,14 +62,14 @@ const UserProfile = () => {
         }
     };
   return (<>
-      <h4>New Connection's</h4>
+      <p>New Connection's</p>
       <div className=" py-4 h-80">
           <div className="row">
               <div className="card-container d-flex overflow-auto" >
                   {responseData.map((data, no) => (
                       data.status == 0 ? (
                           <><div className="col">
-                              <div className="card" style={{ borderRadius: '15px', minWidth: '420px', marginRight: '10px' }}>
+                              <div className="card" style={{ borderRadius: '15px', minWidth: '300px', marginRight: '10px' ,height:"220px"}}>
                                   <div className="card-body p-4">
                                       <div className="d-flex text-black">
                                           <div className="flex-shrink-0">
@@ -142,7 +123,7 @@ const UserProfile = () => {
                       ) : (
                           <>
                             
-                            <h4>You dont have any new connection's</h4>
+                            <p>You dont have any new connection's</p>
 
                           </>
                       )
@@ -153,7 +134,7 @@ const UserProfile = () => {
           </div>
       </div>
 
-      <h4>Existing Connection's</h4>
+      <p> Existing Connection's</p>
       <div className=" py-4 h-80">
           <div className="row">
               <div className="card-container d-flex overflow-auto" >
