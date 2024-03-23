@@ -80,10 +80,6 @@ const UserProfile = () => {
             console.error('Error interacting with user:', error);
         }
     };
-    responseData.map((data, no) => {
-console.log(data)
-    })
-
   return (<>
       <h4>New Connection's</h4>
       <div className=" py-4 h-80">

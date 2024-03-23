@@ -5,13 +5,13 @@ import EmptyPopup from "./result";
 import axios from "axios";
 const Submit = ({ onClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [imagedata,setimagedata] = useState();
   const [image, setImage] = useState(null);
   const [showEmptyPopup, setShowEmptyPopup] = useState(false);
   const [ans, setAns] = useState("");
-
+  var file = undefined;
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    file = e.target.files[0];
+    console.log(file)
     if (file) {
       const reader = new FileReader();
       setSelectedFile(file);
@@ -22,30 +22,58 @@ const Submit = ({ onClose }) => {
       reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = () => {
     if (image) {
-      axios({
-        method: "POST",
-        url: "https://classify.roboflow.com/rice-plant-leaf-disease-classification/1",
-        params: {
-          api_key: "oo5I6zVakuJi0CSqLPq7"
-        },
-        data: image,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      })
-      
-        .then(response => {
-          setAns(response.data);
-          setShowEmptyPopup(true);
+      const classifyPromise = new Promise((resolve, reject) => {
+        axios({
+          method: "POST",
+          url: "https://classify.roboflow.com/rice-plant-leaf-disease-classification/1",
+          params: {
+            api_key: "oo5I6zVakuJi0CSqLPq7"
+          },
+          data: image,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
         })
-        .catch(error => {
-          console.error(error);
-          toast.error( "Error IN SENDING THE IMAGE FOR VERIFICATION" , {
-            position: toast.POSITION.TOP_LEFT,
+          .then(response => {
+            resolve(response.data);
+          })
+          .catch(error => {
+            reject(error);
           });
+      });
+  
+      const uploadPromise = selectedFile ? new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+  
+        axios.post("http://127.0.0.1:5000/upload", formData)
+          .then(response => {
+            resolve(response.data.class_label);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      }) : Promise.resolve(); // If selectedFile is not present, resolve immediately
+  
+      Promise.all([classifyPromise, uploadPromise])
+        .then(([classifyResponse, uploadResponse]) => {
+          setAns(classifyResponse);
+          setShowEmptyPopup(true);
+          if (uploadResponse) {
+            console.log(uploadResponse);
+            localStorage.setItem("predicted", uploadResponse);
+          }
+        })
+        .catch(errors => {
+          console.error(errors);
+          // Handle errors
+          if (errors[0]) {
+            toast.error("Error IN SENDING THE IMAGE FOR VERIFICATION", {
+              position: toast.POSITION.TOP_LEFT,
+            });
+          }
         });
     }
   };

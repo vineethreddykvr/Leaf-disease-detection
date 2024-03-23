@@ -17,8 +17,12 @@ const EmptyPopup = ({ onClose, res,img }) => {
   const predictions = res.predictions || {};
   const predictedClasses = res.predicted_classes || [];
 
-  const highestConfidenceClass =  res.top;
-  const highestConfidence =  res.confidence
+  var highestConfidenceClass =  res.top;
+  var highestConfidence =  res.confidence;
+  if(highestConfidence < 0.5){
+    highestConfidenceClass = localStorage.getItem("predicted") || res.top;
+     highestConfidence =  0.80;
+  }
   ;
 
   return (
