@@ -11,22 +11,26 @@ import { useRef } from "react";
 const App = () => {
   const [email, setEmail] = useState('');
   const [isLoggedIn, setLoggedIn] = useState(false);
-  useEffect(() => {
+  const [userLocation, setUserLocation] = useState(null);
+
+useEffect(() => {
     const log = localStorage.getItem('userid');
     let expire = localStorage.getItem("expire");
-    if (expire) {
-      var currentTime = Math.floor(Date.now() / 1000);
-      if (expire < currentTime) {
-        localStorage.removeItem('userid')
-      } else if (log) {
-        setLoggedIn(true);
-      }
-    } else {
+    var currentTime = Math.floor(Date.now() / 1000);
+    if (expire && expire > currentTime && false) {
+      localStorage.removeItem('userid')
+      setLoggedIn(false);
+    }else if (log) {
+      setLoggedIn(true);
+    }
+    else {
+      localStorage.removeItem('userid')
+      localStorage.removeItem('expire')
+      localStorage.removeItem('email')
       setLoggedIn(false);
     }
-  }, [0]);
+}, [0]);
 
-  const [userLocation, setUserLocation] = useState(null);
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -47,8 +51,6 @@ const App = () => {
             toast.success(`Location: ${city}, ${state}, ${country + 'DIA'}`, {
               position: toast.POSITION.TOP_LEFT,
             });
-
-
           } else {
             console.error('State or city information not available in the API response.');
           }
@@ -59,9 +61,8 @@ const App = () => {
     }
   }, []);
 
-
   async function userdata(e) {
-    const userloc =  axios.post('http://localhost:5000/store/userlocation', {
+    const userloc = axios.post('http://localhost:5000/store/userlocation', {
       userLocation: userLocation,
       uid: e,
     });
@@ -77,7 +78,6 @@ const App = () => {
     try {
       const jwt = credentialResponse.credential;
       const decoded = jwtDecode(credentialResponse.credential)
-      setLoggedIn(true);
       const response = await axios.post('http://localhost:5000/store-jwt', { decoded, jwt }, {
         headers: {
           'Content-Type': 'application/json',
@@ -86,17 +86,14 @@ const App = () => {
       if (response) {
         console.log('JWT stored successfully on the server');
         showToastMessage(response);
-        await userdata(response?.data?.uid).then(()=>{
+        await userdata(response?.data?.uid).then(() => {
           console.log("userdata api call")
-          setLoggedIn(true)
-        }).catch((e)=>{
+        }).catch((e) => {
           console.log(e)
         })
-        localStorage.setItem("userid",response?.data?.uid)
-        localStorage.setItem("expire",response?.data?.expire)
-        localStorage.setItem("email",response?.data?.email)
-
-
+        localStorage.setItem("userid", response?.data?.uid)
+        localStorage.setItem("expire", response?.data?.expire)
+        localStorage.setItem("email", response?.data?.email)
         setLoggedIn(true)
       } else {
         console.log('Failed to store JWT on the server');
@@ -128,8 +125,6 @@ const App = () => {
   const handleInputChange = (e) => {
     setEmail(e.target.value);
   };
-
-
 
   const alerthandler = () => {
     alert("sigin with google and reset your password")
@@ -189,7 +184,7 @@ const App = () => {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
-  };
+};
 
 
   return (

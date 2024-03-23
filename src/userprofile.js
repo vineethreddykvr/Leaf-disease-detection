@@ -16,8 +16,10 @@ const UserProfile = () => {
                         email: userEmail,
                     }
                 });
-
-                setResponseData(response.data.users);
+                if(response){
+                    setResponseData(response.data.users);
+                }
+                
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -78,7 +80,9 @@ const UserProfile = () => {
             console.error('Error interacting with user:', error);
         }
     };
-
+    responseData.map((data, no) => {
+console.log(data)
+    })
 
   return (<>
       <h4>New Connection's</h4>

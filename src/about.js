@@ -43,6 +43,7 @@ const About = () => {
 
         return `${hours}:${minutes}:${seconds}`;
     };
+    var pic =data?.picture
     return (
         <div className="body">
             <br /><br />
@@ -51,7 +52,7 @@ const About = () => {
                     <div className="row">
                         <div className="col-md-4">
                             <div className="profile-img">
-                                <img src={`${data?.picture}`} alt="Profile" className="responsive-image" style={{ objectFit: 'cover', objectPosition: 'center' }} />
+                                <img src={pic} alt="Profile" className="responsive-image" style={{ objectFit: 'cover', objectPosition: 'center' }} />
 
                             </div>
                         </div>
