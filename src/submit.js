@@ -40,6 +40,7 @@ const Submit = ({ onClose }) => {
             resolve(response.data);
           })
           .catch(error => {
+            alert("Error IN SENDING THE IMAGE FOR VERIFICATION")
             reject(error);
           });
       });
@@ -71,10 +72,15 @@ const Submit = ({ onClose }) => {
           // Handle errors
           if (errors[0]) {
             toast.error("Error IN SENDING THE IMAGE FOR VERIFICATION", {
-              position: toast.POSITION.TOP_LEFT,
+              position: toast.POSITION.BOTTOM_LEFT,
             });
+            
           }
         });
+    } else  {
+      toast.error("Error IN SENDING THE IMAGE FOR VERIFICATION", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      })
     }
   };
 

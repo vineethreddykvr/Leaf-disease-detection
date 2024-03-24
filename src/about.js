@@ -2,6 +2,7 @@ import React from 'react';
 import "./about.css"
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Footer from './footer';
 const About = () => {
     const [users, setUserData] = useState([]);
     const userid = localStorage.getItem('userid')
@@ -78,16 +79,17 @@ const About = () => {
                     <div className="row">
                         <div className="col-md-4">
                             <div className="profile-work">
-                                <p>WORK LINK</p>
-                                <a href="">Website Link</a><br />
-                                <a href="">Bootsnipp Profile</a><br />
-                                <a href="">Bootply Profile</a>
-                                <p>SKILLS</p>
-                                <a href="">Web Designer</a><br />
-                                <a href="">Web Developer</a><br />
-                                <a href="">WordPress</a><br />
-                                <a href="">WooCommerce</a><br />
-                                <a href="">PHP, .Net</a><br />
+                                <p>Today's Quote's</p>
+                               <p>
+                               Rice leaf diseases threaten crop yield worldwide. Prevention is key. 'Healthy leaves, healthy harvest.' - Ancient proverb
+                               </p>
+                                <p>
+                                Leaf spot, blast, and sheath blight afflict rice. Timely management crucial. 'Protect foliage, sustain livelihoods.' - Farming wisdom
+                                </p>
+                                <p>Admin Detail's</p>
+                                <a href="https://vineethreddykvr.github.io/kvr.github.io/">Vineeth</a><br />
+                                <br />
+                              
                             </div>
                         </div>
                         <div className="col-md-8">
@@ -185,6 +187,7 @@ const About = () => {
                     </div>
                 </form>
             </div>
+            <Footer />
         </div>
     );
 }
